@@ -1,0 +1,12 @@
+import gql from "graphql-tag"
+
+export default gql`
+   mutation CreateInAppQuestionnaire($questionnaire: InAppQuestionnaireInput) {
+    createInAppQuestionnaire(questionnaire: $questionnaire){
+        _id
+        name
+        isArchived
+        description
+        creationDate
+    }
+}`

@@ -1,0 +1,27 @@
+
+
+import gql from "graphql-tag"
+
+export default gql`
+    mutation CreateInAppQuestionnaireContent($inAppQuestionnaireContent: InAppQuestionnaireContentInput) {
+        createInAppQuestionnaireContent(inAppQuestionnaireContent: $inAppQuestionnaireContent) {
+            _id
+            creationDate
+            questionnaireId
+            multipleChoiceItems {
+                _id
+                index
+                question
+                choices {
+                    display
+                    value
+                    type
+                }
+            }
+            freeTextItems {
+                index
+                question
+            }
+        }
+    }
+`

@@ -1,0 +1,11 @@
+
+
+import gql from "graphql-tag"
+
+export default gql`
+    mutation EditNode($_id: ID) {
+        editNode(_id: $_id, node: { isArchived: false }){
+            _id
+        }
+    }
+`

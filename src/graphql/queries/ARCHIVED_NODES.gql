@@ -1,0 +1,38 @@
+
+import gql from "graphql-tag"
+
+export default gql`
+    query Nodes($nqId: ID){
+        nodes(nqId:$nqId, isArchived: true){
+            _id
+            nqId
+            nodeLabel
+            isSourceNode
+            position {
+                xPos
+                yPos
+            }
+            data {
+                nqId
+                type
+                question {
+                    timeOfDay {
+                        minute
+                        hour
+                    }
+                    questionText
+                    questionChoices {
+                        choiceIconMd5
+                        choiceIconId
+                        choiceIcon
+                        choiceValueType
+                        choiceValue
+                    }
+                }
+                appquestionnaire {
+                    qid
+                }
+            }
+        }
+}
+`

@@ -1,0 +1,37 @@
+import gql from "graphql-tag"
+
+export default gql`
+    query InAppQuestionnaireResponse($_id: ID){
+        inAppQuestionnaireResponse(_id: $_id) {
+            _id
+            name
+            user {
+                _id
+                email
+            }
+            questionnaire {
+                _id
+                name
+            }
+            multipleChoiceItems {
+                index
+                question
+                choices { 
+                    display
+                    value
+                    type
+                }
+                selectedChoice {
+                    display
+                    value
+                    type
+                }
+            }
+            freeTextItems {
+                index
+                question
+                response
+            }
+        }
+}
+`

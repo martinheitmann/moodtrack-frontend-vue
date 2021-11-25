@@ -1,0 +1,22 @@
+import gql from "graphql-tag"
+
+export default gql`
+    mutation ToggleNotificationQuestionnaire(
+            $_id: ID, 
+            $name: String!, 
+            $description: String!, 
+            $isActive: Boolean
+        ) {
+        modifyNotificationQuestionnaire(
+            _id: $_id, 
+            notificationQuestionnaire:{
+                name: $name,
+                description: $description,
+                isActive: $isActive
+            }
+        ){
+            _id
+            isActive
+        }
+    }
+`

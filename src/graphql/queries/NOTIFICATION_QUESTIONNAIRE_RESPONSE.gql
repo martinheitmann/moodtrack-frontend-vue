@@ -1,0 +1,31 @@
+import gql from "graphql-tag"
+
+export default gql`
+    query NotificationQuestionnaireResponse($_id: ID) {
+        notificationQuestionnaireResponse(_id:$_id) {
+            messageId
+            _id
+            timestamp
+            previous
+            next
+            nodeId
+            user {
+                _id
+                email
+            }
+            responseData {
+                questionText
+                choices {
+                    choiceIcon
+                    choiceValueType
+                    choiceValue
+                }
+                selectedChoice {
+                    choiceIcon
+                    choiceValueType
+                    choiceValue
+                }
+            }
+        }
+    }
+`

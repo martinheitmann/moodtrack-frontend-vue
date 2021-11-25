@@ -1,0 +1,17 @@
+import gql from "graphql-tag"
+
+export default gql`
+    mutation RegisterUser($email: String, $password: String) {
+        registerUser(email:$email, password:$password){
+            _id
+            email
+            firstName
+            lastName
+            age
+            fcmRegistrationToken
+            notificationsEnabled
+            profileImage
+            creationDate
+        }
+    }
+`

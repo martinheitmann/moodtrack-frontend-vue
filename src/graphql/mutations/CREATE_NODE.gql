@@ -1,0 +1,27 @@
+
+import gql from "graphql-tag"
+
+export default gql`
+   mutation CreateNode($node: NQNodeInput){
+       createNode(node: $node){
+           _id
+            nqId
+            nodeLabel
+            data {
+                nqId
+                type
+                question {
+                    questionText
+                    questionChoices {
+                        choiceIcon
+                        choiceValueType
+                        choiceValue
+                    }
+                }
+                appquestionnaire {
+                    qid
+                }
+            }
+       } 
+   }
+`

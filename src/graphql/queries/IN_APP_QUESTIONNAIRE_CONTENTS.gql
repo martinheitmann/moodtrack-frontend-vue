@@ -1,0 +1,10 @@
+import gql from "graphql-tag"
+
+export default gql`
+    query InAppQuestionnaireContents($questionnaireId: ID){
+        inAppQuestionnaireContents(questionnaireId: $questionnaireId){
+            _id
+            creationDate
+        }
+    }
+`

@@ -1,0 +1,11 @@
+import gql from "graphql-tag"
+
+export default gql`
+    query Role($uid: ID!) {
+        role(uid: $uid) {
+            uid
+            email
+            role
+        }
+    }
+`

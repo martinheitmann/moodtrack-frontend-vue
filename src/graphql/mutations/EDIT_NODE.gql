@@ -1,0 +1,11 @@
+
+
+import gql from "graphql-tag"
+
+export default gql`
+    mutation EditNode($_id: ID, $node: NQNodeInput) {
+        editNode(_id: $_id, node: $node){
+            _id
+        }
+    }
+`

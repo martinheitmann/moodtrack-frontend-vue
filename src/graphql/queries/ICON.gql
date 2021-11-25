@@ -1,0 +1,14 @@
+import gql from "graphql-tag"
+
+export default gql`
+    query Icon($_id: ID) {
+        icons(_id: $_id) {
+            _id
+            filename
+            length
+            uploadDate
+            md5
+            data
+        }
+    }
+`

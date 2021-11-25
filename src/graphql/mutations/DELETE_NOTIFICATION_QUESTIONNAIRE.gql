@@ -1,0 +1,7 @@
+import gql from "graphql-tag"
+
+export default gql`
+    mutation DeleteNotificationQuestionnaire($_id: ID) {
+        deleteNotificationQuestionnaire(_id:$_id)
+    }
+`

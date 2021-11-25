@@ -1,0 +1,14 @@
+
+import gql from "graphql-tag"
+
+export default gql`
+    query InAppQuestionnaire($_id: ID){
+        inAppQuestionnaire(_id: $_id) {
+            _id
+            name
+            isArchived
+            creationDate
+            description
+        }
+    }
+`

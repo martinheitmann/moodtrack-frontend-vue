@@ -1,0 +1,15 @@
+import gql from "graphql-tag"
+
+export default gql`
+    query NotificationQuestionnaire($_id: ID!) {
+        notificationQuestionnaire(_id: $_id) {
+            _id
+            name
+            description
+            enrolledUsers {
+                _id
+                email
+            }
+        }
+    }
+`

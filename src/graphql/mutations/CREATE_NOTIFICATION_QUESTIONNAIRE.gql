@@ -1,0 +1,12 @@
+import gql from "graphql-tag"
+
+export default gql`
+    mutation CreateNotificationQuestionnaire($notificationQuestionnaire: NotificationQuestionnaireInput){
+        createNotificationQuestionnaire(notificationQuestionnaire: $notificationQuestionnaire){
+            name
+            description
+            created
+            lastModified
+        }
+    }
+`

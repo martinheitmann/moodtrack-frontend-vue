@@ -1,0 +1,33 @@
+
+import gql from "graphql-tag"
+
+export default gql`
+    query {
+        answers {
+            user {
+                _id
+                email
+            }
+            questionSet
+            setItemId
+            submitted
+            question {
+                text
+                choices {
+                    iconId
+                    valueType
+                    value
+                }
+            }
+            choice {
+                iconId
+                valueType
+                value
+            }
+            originalUserData {
+                userId
+                userEmail
+            }
+        }
+    }
+`

@@ -1,0 +1,13 @@
+import gql from "graphql-tag"
+
+export default gql`
+  mutation EditInAppQuestionnaire($_id: ID!, $questionnaire: InAppQuestionnaireInput!) {
+    modifyInAppQuestionnaire(_id: $_id, questionnaire: $questionnaire){
+      _id
+      name
+      isArchived
+      creationDate
+      description
+    }
+  }   
+`

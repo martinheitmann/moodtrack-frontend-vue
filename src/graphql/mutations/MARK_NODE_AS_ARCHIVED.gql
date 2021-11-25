@@ -1,0 +1,9 @@
+
+
+import gql from "graphql-tag"
+
+export default gql`
+    mutation ArchiveNode($_id: ID) {
+        archiveNode(_id: $_id)
+    }
+`

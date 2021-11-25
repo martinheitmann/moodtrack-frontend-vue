@@ -1,0 +1,7 @@
+import gql from "graphql-tag"
+
+export default gql`
+   mutation RestoreInAppQuestionnaire($_id: ID!){
+       restoreInAppQuestionnaire(_id: $_id)
+   }
+`

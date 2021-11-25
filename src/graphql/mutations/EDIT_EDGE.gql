@@ -1,0 +1,9 @@
+import gql from "graphql-tag"
+
+export default gql`
+    mutation EditEdge($_id: ID, $edge: NQEdgeInput) {
+        editEdge(_id: $_id, edge: $edge){
+            _id
+        }
+    }
+`

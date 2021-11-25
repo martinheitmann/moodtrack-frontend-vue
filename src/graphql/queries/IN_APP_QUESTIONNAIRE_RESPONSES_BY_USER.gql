@@ -1,0 +1,40 @@
+
+
+import gql from "graphql-tag"
+
+export default gql`
+    query InAppQuestionnaireResponsesByUser($user: ID) {
+        inAppQuestionnaireResponses(user: $user) {
+            _id
+            messageId
+            precedingNotificationQuestion {
+                _id
+                messageId
+            }
+            timestamp
+            name
+            user {
+                _id
+                email
+            }
+            questionnaire {
+                name
+                _id
+            }
+            multipleChoiceItems {
+                index
+                question
+                choices {
+                    display
+                    value
+                    type
+                }
+                selectedChoice {
+                    display
+                    value
+                    type
+                }
+            }
+        }
+    }
+`

@@ -1,0 +1,20 @@
+
+import gql from "graphql-tag"
+
+export default gql`
+    query Edges($nqId: ID){
+        edges(nqId:$nqId){
+            _id
+            nqId
+            source
+            target
+            isArchived
+            edgeLabel
+            condition {
+                condition
+                conditionValue
+                conditionType
+            }
+        }
+    }
+`

@@ -1,0 +1,7 @@
+import gql from "graphql-tag"
+
+export default gql`
+    mutation DeleteIcon($_id: ID!) {
+        deleteIcon(_id: $_id)
+    }
+`
