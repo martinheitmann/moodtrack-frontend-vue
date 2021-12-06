@@ -548,7 +548,15 @@ export default {
               query: LatestInAppQuestionnaireContentQuery,
               variables() {
                 return {
-                  _id: _this.id,
+                  questionnaireId: _this.id,
+                };
+              },
+            },
+            {
+              query: InAppQuestionnaireContentRevisionsQuery,
+              variables() {
+                return {
+                  questionnaireId: _this.id,
                 };
               },
             },
