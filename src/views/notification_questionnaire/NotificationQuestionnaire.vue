@@ -23,9 +23,61 @@
         </template>
       </CToaster>
 
-      <!-- NETWORK VIEW -->
+      <!-- NETWORK AND ENROLLMENT -->
       <CCol class="col-8">
-        <div id="mynetwork"></div>
+        <!-- NETWORK -->
+        <CRow>
+          <div id="mynetwork"></div>
+        </CRow>
+        <!------------->
+
+        <!-- ENROLLMENT -->
+        <CRow class="m-2">
+          <CCol>
+            <CCard>
+              <CCardHeader>
+                Register users to receive notifications from this questionnaire
+              </CCardHeader>
+              <CCardBody>
+                <CCol>
+                  <CRow>
+                    <CCol>
+                      <Multiselect
+                        v-model="selectedUserToRegister"
+                        :options="users"
+                        label="email"
+                        track-by="_id"
+                        placeholder="Select a user to register for notifications..."
+                      />
+                    </CCol>
+                    <CCol xs>
+                      <CButton
+                        :color="'info'"
+                        class="m-1"
+                        v-on:click="addUserToNotificationQuestionnaire"
+                      >
+                        Add
+                      </CButton>
+                    </CCol>
+                  </CRow>
+                  <CRow
+                    v-if="
+                      notificationQuestionnaire &&
+                        notificationQuestionnaire.enrolledUsers
+                    "
+                    class="mt-2"
+                  >
+                    <EnrolledUsersList
+                      :users="notificationQuestionnaire.enrolledUsers"
+                      :onDeleteUser="removeUserFromNotificationQuestionnaire"
+                    />
+                  </CRow>
+                </CCol>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+        <!---------------->
       </CCol>
       <!-------->
 
@@ -130,7 +182,7 @@
       </CCol>
       <!-- -->
     </CRow>
-    <CRow class="m-2">
+    <!-- <CRow class="m-2">
       <CCol col="8">
         <CCard>
           <CCardHeader>
@@ -174,7 +226,7 @@
           </CCardBody>
         </CCard>
       </CCol>
-    </CRow>
+    </CRow> -->
   </CCol>
 </template>
 

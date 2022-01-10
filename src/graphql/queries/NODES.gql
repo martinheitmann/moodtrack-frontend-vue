@@ -21,6 +21,7 @@ export default gql`
                         minute
                         hour
                     }
+                    visible
                     questionText
                     questionChoices {
                         choiceIconMd5

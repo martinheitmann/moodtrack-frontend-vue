@@ -35,7 +35,7 @@
     </CModal>
     <!--------------- End modal ------------->
 
-    <!-- ADD NODE VIEW -->
+    <!-- EDIT NODE VIEW -->
     <CRow class="m-2">
       <CCard class="w-100">
         <CCardHeader>
@@ -179,6 +179,18 @@
                 placeholder="Provide your choice value..."
               />
             </CRow>
+            <CRow
+              align-vertical="center"
+              class="mt-2"
+              v-if="selectedNodeType.value === 'QUESTION'"
+            >
+              <CCol xs>
+                Enable calendar icon visible
+              </CCol>
+              <CCol xs class="ml-2">
+                <CSwitch :color="'info'" v-bind:checked.sync="visible" />
+              </CCol>
+            </CRow>
             <CRow class="mt-2" v-if="selectedNodeType.value === 'QUESTION'">
               <CButton :color="'info'" :block="true" v-on:click="addChoice">
                 Add New Choice
@@ -240,7 +252,7 @@
         </CCardBody>
       </CCard>
     </CRow>
-    <!-- ADD NODE VIEW END -->
+    <!-- EDIT NODE VIEW END -->
   </CCol>
 </template>
 
@@ -303,6 +315,7 @@ export default {
               if (data.question) {
                 const question = data.question;
                 this.questionText = question.questionText;
+                this.visible = question.visible;
                 this.choices = question.questionChoices.map((q) => {
                   return {
                     choiceIconId: q.choiceIconId,
@@ -356,15 +369,10 @@ export default {
   },
   data() {
     return {
-      archiveNodeModal: false,
-      archiveNodeLoading: 0,
-      nodeId: null,
-      isInitialQuestion: false,
       timeOfDay: {
         HH: "00",
         mm: "00",
       },
-      selectedNodeType: "NONE",
       nodeTypes: [
         {
           display: "Select one",
@@ -373,12 +381,6 @@ export default {
         { display: "Question", value: "QUESTION" },
         { display: "In-app Questionnaire", value: "IN_APP_QUESTIONNAIRE" },
       ],
-      nodeLabel: "",
-      questionText: "",
-      choices: [],
-      choiceValueInput: "",
-      choiceValueTypeInput: null,
-      choiceIconInput: null,
       iconOptions: ["Hello", "World"],
       choiceTypeOptions: [
         { display: "Number", value: "number" },
@@ -391,20 +393,30 @@ export default {
         "Questionnaire 3",
       ],
       selectedInAppQuestionnaire: null,
+      selectedNodeType: "NONE",
+      visible: false,
       customTitleInput: "",
       customBodyInput: "",
+      nodeLabel: "",
+      questionText: "",
+      choices: [],
+      choiceValueInput: "",
+      choiceValueTypeInput: null,
+      choiceIconInput: null,
+      archiveNodeModal: false,
+      archiveNodeLoading: 0,
+      nodeId: null,
+      isInitialQuestion: false,
     };
   },
   methods: {
     switchUp(index) {
-      console.log("switchUp called.");
       const temp = this.choices[index + 1];
       const itemToSwitch = this.choices[index];
       this.$set(this.choices, index + 1, itemToSwitch);
       this.$set(this.choices, index, temp);
     },
     switchDown(index) {
-      console.log("switchDown called.");
       const temp = this.choices[index - 1];
       const itemToSwitch = this.choices[index];
       this.$set(this.choices, index - 1, itemToSwitch);
@@ -438,6 +450,7 @@ export default {
         const question = {
           questionText: this.questionText,
           questionChoices: this.choices,
+          visible: this.visible,
         };
         const data = {
           type: "question",
@@ -494,6 +507,7 @@ export default {
         const question = {
           questionText: this.questionText,
           questionChoices: this.choices,
+          visible: this.visible,
         };
         const data = {
           type: "question",
@@ -541,13 +555,5 @@ export default {
   },
 };
 </script>
-
-<style type="text/css">
-#mynetwork {
-  width: 100%;
-  height: 600px;
-  border: 1px solid lightgray;
-}
-</style>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
