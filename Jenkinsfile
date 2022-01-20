@@ -11,11 +11,9 @@ pipeline {
         }
         stage('Build') { 
             steps {
-                configFileProvider([configFile(fileId: 'moodtrack-firebase-web-prod', targetLocation:'', variable: 'FIREBASE_CREDENTIALS')]) {
-                    sh "sudo cp $FIREBASE_CREDENTIALS ."
-                    sh "cat ${env.FIREBASE_CREDENTIALS}"
-                    sh 'npm run build'
-                }
+                sh "sudo cp /var/www/env/moodtrack-frontend/.env.production ."
+                sh "cat .env.production"
+                sh 'npm run build'
             }
         }
         stage('Artifacts'){

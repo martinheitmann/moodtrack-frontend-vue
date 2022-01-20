@@ -24,14 +24,6 @@ const firebaseConfig = {
   appId: process.env.VUE_APP_APP_ID,
 };
 
-console.log(process.env.NODE_ENV);
-console.log(process.env.VUE_APP_API_KEY);
-console.log(process.env.VUE_APP_AUTH_DOMAIN);
-console.log(process.env.VUE_APP_PROJECT_ID);
-console.log(process.env.VUE_APP_STORAGE_BUCKET);
-console.log(process.env.VUE_APP_MESSAGING_SENDER_ID);
-console.log(process.env.VUE_APP_APP_ID);
-
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 

@@ -132,7 +132,14 @@ export default {
             resolve(data);
           })
           .catch((error) => {
-            reject(error);
+            if (firebase.auth().currentUser) {
+              firebase
+                .auth()
+                .signOut()
+                .finally(function(error) {
+                  reject(error);
+                });
+            } else reject(error);
           });
       });
     },
