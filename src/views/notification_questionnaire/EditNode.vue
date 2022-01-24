@@ -1,39 +1,16 @@
 <template>
   <CCol>
-    <!---------------- Archive node modal ----------------->
-    <CModal title="Archive node " color="info" :show.sync="archiveNodeModal">
-      <div slot="default">
-        <CCol>
-          Are you sure you want to archive the node? You can restore it later.
-        </CCol>
-      </div>
-      <div slot="footer">
-        <CRow align-horizontal="end">
-          <CCol class="m-1" v-if="archiveNodeLoading">
-            <CSpinner
-              v-if="archiveNodeLoading"
-              color="primary"
-              style="width:3rem;height:3rem;"
-            />
-          </CCol>
-          <CCol xs class="m-1" v-if="!archiveNodeLoading">
-            <CButton color="success" size="lg" v-on:click="archiveNode">
-              Yes
-            </CButton>
-          </CCol>
-          <CCol xs class="m-1" v-if="!archiveNodeLoading">
-            <CButton
-              color="danger"
-              size="lg"
-              v-on:click="archiveNodeModal = false"
-            >
-              No
-            </CButton>
-          </CCol>
-        </CRow>
-      </div>
-    </CModal>
-    <!--------------- End modal ------------->
+    <ConfirmCancelModal
+      :isVisible="archiveNodeModal"
+      message="Are you sure you want to archive the node? You can restore it later."
+      :isLoading="archiveNodeLoading"
+      :onPositive="archiveNode"
+      :onNegative="
+        () => {
+          archiveNodeModal = false;
+        }
+      "
+    />
 
     <!-- EDIT NODE VIEW -->
     <CRow class="m-2">
@@ -100,88 +77,10 @@
                 v-model="questionText"
               />
             </CRow>
-            <CRow v-if="selectedNodeType.value === 'QUESTION'">Choices:</CRow>
 
-            <CRow
-              class="mt-1 mb-3"
-              v-if="selectedNodeType.value === 'QUESTION'"
-            >
-              <CCol>
-                <CRow
-                  v-for="(choice, index) in choices"
-                  :key="index"
-                  class="border rounded p-1 mt-1 mb-1"
-                  align-vertical="center"
-                >
-                  <CCol xs class="mr-2 ml-2">
-                    {{ choice.choiceIcon }}
-                  </CCol>
-                  <CCol xs class="mr-2 ml-2">
-                    {{ choice.choiceValueType }}
-                  </CCol>
-                  <CCol xs class="mr-2 ml-2">
-                    {{ choice.choiceValue }}
-                  </CCol>
-                  <CCol></CCol>
-                  <CCol xs class="mr-1 ml-1">
-                    <CButton
-                      :size="'sm'"
-                      :color="'info'"
-                      v-on:click="switchUp(index)"
-                    >
-                      <CIcon :content="$options.bottom" />
-                    </CButton>
-                  </CCol>
-                  <CCol xs class="mr-1 ml-1">
-                    <CButton
-                      :size="'sm'"
-                      :color="'info'"
-                      v-on:click="switchDown(index)"
-                    >
-                      <CIcon :content="$options.top" />
-                    </CButton>
-                  </CCol>
-                  <CCol xs class="mr-1 ml-1">
-                    <CButton
-                      :size="'sm'"
-                      :color="'danger'"
-                      v-on:click="deleteChoice(index)"
-                    >
-                      <CIcon :content="$options.X" />
-                    </CButton>
-                  </CCol>
-                </CRow>
-              </CCol>
-            </CRow>
-
-            <CRow v-if="selectedNodeType.value === 'QUESTION'">
-              <Multiselect
-                v-model="choiceIconInput"
-                :options="icons"
-                label="filename"
-                track-by="_id"
-                placeholder="Select a icon filename..."
-              />
-            </CRow>
-            <CRow class="mt-2" v-if="selectedNodeType.value === 'QUESTION'">
-              <Multiselect
-                v-model="choiceValueTypeInput"
-                :options="choiceTypeOptions"
-                label="display"
-                track-by="value"
-                placeholder="Select a choice data type..."
-              />
-            </CRow>
-            <CRow class="mt-2" v-if="selectedNodeType.value === 'QUESTION'">
-              <CInput
-                v-model="choiceValueInput"
-                class="w-100"
-                placeholder="Provide your choice value..."
-              />
-            </CRow>
             <CRow
               align-vertical="center"
-              class="mt-2"
+              class="mt-2 mb-2"
               v-if="selectedNodeType.value === 'QUESTION'"
             >
               <CCol xs>
@@ -191,10 +90,26 @@
                 <CSwitch :color="'info'" v-bind:checked.sync="visible" />
               </CCol>
             </CRow>
-            <CRow class="mt-2" v-if="selectedNodeType.value === 'QUESTION'">
-              <CButton :color="'info'" :block="true" v-on:click="addChoice">
-                Add New Choice
-              </CButton>
+
+            <CRow v-if="selectedNodeType.value === 'QUESTION'">Choices:</CRow>
+            <CRow
+              class="mt-1 mb-3"
+              v-if="selectedNodeType.value === 'QUESTION'"
+            >
+              <SelectedChoicesList
+                :choices="choices"
+                :onSwitchUp="switchUp"
+                :onSwitchDown="switchDown"
+                :onDelete="deleteChoice"
+              />
+            </CRow>
+
+            <CRow v-if="selectedNodeType.value === 'QUESTION'">
+              <NewChoiceInput
+                :availableIcons="icons"
+                :choiceTypeOptions="choiceTypeOptions"
+                :onSubmit="addChoice"
+              />
             </CRow>
             <CRow
               class="mb-2"
@@ -284,6 +199,9 @@ export default {
     inAppQuestionnaires: Array,
   },
   components: {
+    ConfirmCancelModal: () => import("./components/ConfirmCancelModal.vue"),
+    NewChoiceInput: () => import("./components/NewChoiceInput.vue"),
+    SelectedChoicesList: () => import("./components/SelectedChoicesList.vue"),
     Multiselect: () => import("vue-multiselect"),
     VueTimepicker: () => import("vue2-timepicker"),
   },

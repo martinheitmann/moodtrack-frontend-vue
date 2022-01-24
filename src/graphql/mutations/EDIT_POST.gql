@@ -1,0 +1,15 @@
+import gql from "graphql-tag"
+
+export default gql`
+    mutation EditPost($_id: ID, $post: PostInput){
+        modifyPost(_id:$_id, post:$post){
+            _id
+            created
+            title
+            body
+            type
+            iconId
+            pinned
+        }
+    }
+`

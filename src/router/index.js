@@ -62,6 +62,9 @@ const TestMessaging = () => import("@/views/messaging/TestMessaging");
 // Settings/config
 const Configuration = () => import("@/views/settings/Settings");
 
+// Posts
+const Posts = () => import("@/views/posts/Posts");
+
 Vue.use(Router);
 
 const router = new Router({
@@ -264,7 +267,7 @@ const router = new Router({
         },
         {
           path: "configuration",
-          meta: { label: "Configuation" },
+          meta: { label: "Configuration" },
           component: {
             render(c) {
               return c("router-view");
@@ -278,7 +281,22 @@ const router = new Router({
             },
           ],
         },
-
+        {
+          path: "posts",
+          meta: { label: "Posts" },
+          component: {
+            render(c) {
+              return c("router-view");
+            },
+          },
+          children: [
+            {
+              path: "",
+              name: "Posts",
+              component: Posts,
+            },
+          ],
+        },
         //---------------------------------------------------
         {
           path: "theme",

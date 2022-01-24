@@ -14,6 +14,16 @@ export default [
       },
       {
         _name: "CSidebarNavTitle",
+        _children: ["Content"],
+      },
+      {
+        _name: "CSidebarNavItem",
+        name: "Posts & News",
+        to: "/posts",
+        icon: "cil-comment-square",
+      },
+      {
+        _name: "CSidebarNavTitle",
         _children: ["Notification Questionnaire"],
       },
       {
