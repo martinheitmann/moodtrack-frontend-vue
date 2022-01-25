@@ -12,6 +12,7 @@
           :onEdit="editPost"
           :editMode="editMode"
           :postData="postData"
+          :availableIcons="icons"
         />
         <CRow class="mb-4">
           <CCol>
@@ -31,8 +32,8 @@
         <CRow>
           <PostsList
             :posts="posts"
-            :onDelete="() => {}"
             :onEdit="openEditPostModal"
+            :onDelete="deletePost"
           />
         </CRow>
       </CCol>
@@ -45,8 +46,10 @@
 
 <script>
 import PostsQuery from "../../graphql/queries/POSTS.gql";
+import IconsQuery from "../../graphql/queries/ICONS.gql";
 import CreatePostMutation from "../../graphql/mutations/CREATE_POST.gql";
 import EditPostMutation from "../../graphql/mutations/EDIT_POST.gql";
+import DeletePostMutation from "../../graphql/mutations/DELETE_POST.gql";
 export default {
   components: {
     PostsList: () => import("./PostsList.vue"),
@@ -57,7 +60,9 @@ export default {
       showModal: false,
       createPostLoading: 0,
       postsLoading: 0,
+      iconsLoading: 0,
       posts: [],
+      icons: [],
       editMode: null,
       postData: null,
     };
@@ -113,6 +118,9 @@ export default {
         this.closeEditPostModal();
       }
     },
+    deletePost(id) {
+      this.deletePostMutation(id);
+    },
     createPostMutation(postData) {
       const _this = this;
       _this.createPostLoading = true;
@@ -156,11 +164,33 @@ export default {
           console.log(error);
         });
     },
+    deletePostMutation(id) {
+      this.$apollo
+        .mutate({
+          mutation: DeletePostMutation,
+          variables: {
+            _id: id,
+          },
+          refetchQueries: [
+            {
+              query: PostsQuery,
+              loadingKey: "postsLoading",
+            },
+          ],
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
   },
   apollo: {
     posts: {
       query: PostsQuery,
       loadingKey: "postsLoading",
+    },
+    icons: {
+      query: IconsQuery,
+      loadingKey: "iconsLoading",
     },
   },
 };

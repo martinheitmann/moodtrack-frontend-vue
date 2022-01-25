@@ -22,13 +22,21 @@
           </CCol>
         </CRow>
         <CRow>
-          <CCol xs class="mr-2">
+          <CCol xs class="mr-2 ml-4">
             Pinned
           </CCol>
           <CCol xs>
             <CSwitch :color="'info'" v-bind:checked.sync="isPinned" />
           </CCol>
         </CRow>
+        <CRow>
+          <CCol>
+            <CButton>
+              Show Available Header Icons
+            </CButton>
+          </CCol>
+        </CRow>
+        <CRow> </CRow>
       </CCol>
     </div>
     <div slot="footer">
@@ -62,6 +70,7 @@ export default {
     onClose: Function,
     editMode: Boolean,
     postData: Object,
+    availableIcons: Array,
   },
   watch: {
     postData: {
@@ -88,6 +97,8 @@ export default {
       title: "",
       body: "",
       isPinned: false,
+      headerIcon: null,
+      iconSectionExpanded: false,
     };
   },
   computed: {
