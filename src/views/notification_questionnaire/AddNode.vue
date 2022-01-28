@@ -276,6 +276,7 @@ export default {
         const question = {
           questionText: this.questionText,
           questionChoices: this.choices,
+          visible: false,
         };
         const data = {
           type: "question",
