@@ -495,7 +495,7 @@ export default {
           newInAppQuestionnaire.data.appquestionnaire.timeOfDay = timeOfDay;
           newInAppQuestionnaire.isSourceNode = true;
         } else {
-          newQuestion.isSourceNode = false;
+          newInAppQuestionnaire.isSourceNode = false;
         }
         this.onSubmit(newInAppQuestionnaire);
       }
