@@ -112,7 +112,7 @@ export default {
           label.year,
           data
         );
-        console.log(value);
+        //console.log(value);
         if (value) {
           return {
             label: label,
@@ -139,8 +139,8 @@ export default {
     numberOfResponsesForEachDay: {
       query: NotificationResponsesPerDayQuery,
       variables() {
-        console.log(this.graphStart);
-        console.log(this.graphEnd);
+        //console.log(this.graphStart);
+        //console.log(this.graphEnd);
         return {
           startDate: this.graphStart,
           endDate: this.graphEnd,
