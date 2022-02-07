@@ -6,9 +6,10 @@ import { iconsSet as icons } from "./assets/icons/icons.js";
 import store from "./store";
 import VueApollo from "vue-apollo";
 import { ApolloClient } from "apollo-client";
-import { from, ApolloLink } from "apollo-link";
+import { from, ApolloLink, fromPromise } from "apollo-link";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { createUploadLink } from "apollo-upload-client";
+import "regenerator-runtime";
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -27,35 +28,27 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-const authLink = new ApolloLink((operation, forward) => {
-  // add the authorization to the headers
-  operation.setContext(({ headers = {} }) => ({
-    headers: {
-      ...headers,
-      authorization: store.getters.getIdToken || null,
-    },
-  }));
-  return forward(operation);
+const asyncAuthLink = new ApolloLink((operation, forward) => {
+  return fromPromise(
+    new Promise((p) => p()).then(async () => {
+      return await getCurrentUserIdToken();
+    })
+  )
+    .filter((value) => Boolean(value))
+    .flatMap((token) => {
+      operation.setContext(({ headers = {} }) => ({
+        headers: {
+          ...headers,
+          authorization: token,
+        },
+      }));
+      return forward(operation);
+    });
 });
 
-// Using localStorage is probably a really bad idea. Don't do it
-// if it can be avoided.
-firebase.auth().onIdTokenChanged(function(user) {
-  store.commit("setIdTokenLoading", true);
-  if (user) {
-    user
-      .getIdToken(true)
-      .then(function(idToken) {
-        store.commit("setIdToken", idToken);
-        store.commit("setCurrentUserEmail", user.email);
-        store.commit("setIdTokenLoading", false);
-      })
-      .catch(function(error) {
-        console.log(error);
-        store.commit("setIdTokenLoading", false);
-      });
-  }
-});
+async function getCurrentUserIdToken() {
+  return await firebase.auth().currentUser.getIdToken();
+}
 
 // Gets the current user from Firebase auth.
 // Registers the onAuthStateChanged and unsubscribes on
@@ -76,7 +69,7 @@ const uploadLink = createUploadLink({
 });
 
 // For authorization headers and graphql upload.
-const additiveLink = from([authLink, uploadLink]);
+const additiveLink = from([asyncAuthLink, uploadLink]);
 
 // Cache implementation, not really neccessary for this app
 const cache = new InMemoryCache();

@@ -27,7 +27,7 @@ export default {
     },
     getData() {
       return this.data.map(function(d) {
-        console.log(d.value);
+        //console.log(d.value);
         return d.value;
       });
     },
