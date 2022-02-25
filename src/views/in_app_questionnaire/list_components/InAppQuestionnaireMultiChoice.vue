@@ -10,7 +10,8 @@
             :color="'info'"
             v-on:click.stop="toggleEditMode"
           >
-            <CIcon :content="$options.Pencil" />
+            <CIcon v-if="editMode" :content="$options.Check" />
+            <CIcon v-if="!editMode" :content="$options.Pencil" />
           </CButton>
         </CCol>
         <CCol xs>
@@ -47,17 +48,12 @@
               <CCol v-if="editMode" class="m-2">
                 {{ item.display || item.value }}
               </CCol>
-              <CCol
-                xs
-                v-if="editMode"
-                class="m-2"
-                v-on:click="deleteChoice(index)"
-              >
+              <CCol xs v-if="editMode" class="m-2">
                 <CButton
                   class="m-1"
                   :size="'sm'"
                   :color="'danger'"
-                  v-on:click="onDeleteClicked"
+                  v-on:click="deleteChoice(index)"
                 >
                   <CIcon :content="$options.X" />
                 </CButton>
@@ -92,7 +88,10 @@
             </CRow>
             <CRow>
               <CCol>
-                <CInput v-model="choiceValueInput" placeholder="Value" />
+                <CInput
+                  v-model="choiceValueInput"
+                  placeholder="Value (Required)"
+                />
               </CCol>
             </CRow>
             <CRow>
@@ -110,7 +109,7 @@
                   :options="choiceTypeOptions"
                   label="display"
                   track-by="value"
-                  placeholder="Type (Optional)"
+                  placeholder="Type (Required)"
                 />
               </CCol>
             </CRow>
@@ -145,6 +144,7 @@ export default {
   Pencil: cilPencil,
   X: cilX,
   Plus: cilPlus,
+  Check: cilCheckCircle,
   components: {
     Multiselect: () => import("vue-multiselect"),
   },
@@ -160,7 +160,7 @@ export default {
       questionTextInput: "",
       choiceValueInput: "",
       choiceDisplayInput: "",
-      choiceTypeInput: null,
+      choiceTypeInput: { display: "Number", value: "NUMBER" },
       questionChoices: [],
       editMode: false,
       addAlternativeMode: false,

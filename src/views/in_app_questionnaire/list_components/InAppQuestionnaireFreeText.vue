@@ -10,7 +10,8 @@
             :color="'info'"
             v-on:click.stop="toggleEditMode"
           >
-            <CIcon :content="$options.Pencil" />
+            <CIcon v-if="editMode" :content="$options.Check" />
+            <CIcon v-if="!editMode" :content="$options.Pencil" />
           </CButton>
         </CCol>
         <CCol xs>
@@ -39,10 +40,11 @@
 </template>
 
 <script>
-import { cilX, cilPlus, cilCheckCircle, cilPencil } from "@coreui/icons";
+import { cilX, cilCheckCircle, cilPencil } from "@coreui/icons";
 export default {
   Pencil: cilPencil,
   X: cilX,
+  Check: cilCheckCircle,
   props: {
     item: Object,
     index: Number,
