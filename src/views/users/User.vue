@@ -153,12 +153,17 @@
               In-app Questionnaire Responses
             </CButton>
           </CCol>
-          <CCol xs>
+          <CCol xs class="mr-2">
             <CButton
               color="info"
               v-on:click="currentTable = 'grouped_responses'"
             >
               Grouped Responses
+            </CButton></CCol
+          >
+          <CCol xs>
+            <CButton color="info" v-on:click="currentTable = 'files_list'">
+              Uploaded Files
             </CButton></CCol
           >
         </CRow>
@@ -175,6 +180,12 @@
           :app_responses="inAppQuestionnaireResponses"
           :notif_responses="notificationQuestionnaireResponses"
         />
+        <UserFilesList
+          v-if="currentTable === 'files_list'"
+          :files="documentsByOwner"
+          :onDownload="downloadFile"
+          :onDelete="deleteFile"
+        />
       </CCol>
     </CRow>
   </div>
@@ -183,18 +194,24 @@
 <script>
 import UserQuery from "../../graphql/queries/USER.gql";
 import RoleQuery from "../../graphql/queries/ROLE.gql";
+import DocumentListQuery from "../../graphql/queries/DOCUMENT_LIST.gql";
+import DocumentQuery from "../../graphql/queries/DOCUMENT.gql";
+import DeleteDocumentMutation from "../../graphql/mutations/DELETE_DOCUMENT.gql";
 import RemoveUserMutation from "../../graphql/mutations/UNREGISTER_USER.gql";
 import GrantRoleMutation from "../../graphql/mutations/GRANT_ROLE.gql";
 import NotificationQuestionnaireResponsesByUserQuery from "../../graphql/queries/NOTIFICATION_QUESTIONNAIRE_RESPONSES_BY_USER.gql";
 import InAppQuestionnaireResponsesByUserQuery from "../../graphql/queries/IN_APP_QUESTIONNAIRE_RESPONSES_BY_USER.gql";
 import { formatDateWithHourAndSeconds } from "../../util/DateUtils";
 import { cilReload } from "@coreui/icons";
+import download from "downloadjs";
+import mime from "mime-types";
 export default {
   name: "User",
   components: {
     UserNQResponsesTable: () => import("./UserNQResponsesTable.vue"),
     UserIAResponsesTable: () => import("./UserIAResponsesTable.vue"),
     UserGroupedResponsesList: () => import("./UserGroupedResponsesList.vue"),
+    UserFilesList: () => import("./UserFilesList.vue"),
   },
   props: {
     id: String,
@@ -216,6 +233,7 @@ export default {
       deleteUserModal: false,
       notificationQuestionnaireResponses: [],
       inAppQuestionnaireResponses: [],
+      documentsByOwner: [],
       currentTable: "notification_questionnaire_responses",
       allowedFields: [
         {
@@ -372,6 +390,63 @@ export default {
           _this.showErrorToast();
         });
     },
+    downloadFile(index) {
+      const _this = this;
+      const fileId = this.documentsByOwner[index]._id;
+      const userId = this.id;
+      if (fileId) {
+        this.$apollo
+          .query({
+            query: DocumentQuery,
+            variables: {
+              ownerId: userId,
+              _id: fileId,
+            },
+          })
+          .then((result) => {
+            const data = atob(result.data.documentByOwner.data);
+            const mimeType = mime.lookup(result.data.documentByOwner.filename);
+            const filename = result.data.documentByOwner.filename;
+            download(data, filename, mimeType);
+          })
+          .catch((error) => {
+            _this.errorMessage = error;
+            _this.showErrorToast();
+          });
+      }
+    },
+    deleteFile(index) {
+      const _this = this;
+      const fileId = this.documentsByOwner[index]._id;
+      const userId = this.id;
+      if (fileId) {
+        this.$apollo
+          .mutate({
+            mutation: DeleteDocumentMutation,
+            variables: {
+              ownerId: userId,
+              _id: fileId,
+            },
+            refetchQueries: [
+              {
+                query: DocumentListQuery,
+                loadingKey: "loading",
+                variables: {
+                  ownerId: userId,
+                },
+              },
+            ],
+          })
+          .then((success) => {
+            _this.successMessage = "File successfully deleted!";
+            _this.showSuccessToast();
+          })
+          .catch((error) => {
+            _this.errorMessage = error;
+            _this.showErrorToast();
+          });
+      }
+    },
   },
   apollo: {
     role: {
@@ -407,6 +482,15 @@ export default {
       variables() {
         return {
           user: this.id,
+        };
+      },
+    },
+    documentsByOwner: {
+      query: DocumentListQuery,
+      loadingKey: "loading",
+      variables() {
+        return {
+          ownerId: this.id,
         };
       },
     },
