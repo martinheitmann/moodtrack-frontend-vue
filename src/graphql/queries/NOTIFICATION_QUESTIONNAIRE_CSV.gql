@@ -1,0 +1,12 @@
+import gql from "graphql-tag"
+
+export default gql`
+    query NotificationQuestionnaireResponsesCsv($userId: ID!) {
+        userNotificationQuestionnaireResponsesCsv(userId: $userId){
+            _id
+            filename
+            ownerId
+            data
+        }
+    }
+`

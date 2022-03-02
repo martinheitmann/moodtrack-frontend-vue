@@ -116,6 +116,24 @@
               <CCol xs v-if="rolesRefresh" class="mt-2">
                 <h6>Role updated! Wait and refresh to see changes.</h6>
               </CCol>
+              <CCol xs class="mb-2 mt-2">
+                <CButton
+                  color="info"
+                  size="lg"
+                  v-on:click="downloadNqResponsesCsv"
+                  v-bind="{ variant: 'outline' }"
+                  >Download Notification Questionnaire Responses</CButton
+                >
+              </CCol>
+              <CCol xs class="mb-2 mt-2">
+                <CButton
+                  color="info"
+                  size="lg"
+                  v-on:click="downloadInAppResponsesCsv"
+                  v-bind="{ variant: 'outline' }"
+                  >Download In-app Questionnaire Responses</CButton
+                >
+              </CCol>
             </CCol>
           </CCardBody>
           <CCardFooter>
@@ -199,6 +217,8 @@ import DocumentQuery from "../../graphql/queries/DOCUMENT.gql";
 import DeleteDocumentMutation from "../../graphql/mutations/DELETE_DOCUMENT.gql";
 import RemoveUserMutation from "../../graphql/mutations/UNREGISTER_USER.gql";
 import GrantRoleMutation from "../../graphql/mutations/GRANT_ROLE.gql";
+import NotificationQuestionnaireResponsesCsvQuery from "../../graphql/queries/NOTIFICATION_QUESTIONNAIRE_CSV.gql";
+import InAppQuestionnaireResponsesCsvQuery from "../../graphql/queries/IN_APP_QUESTIONNAIRE_CSV.gql";
 import NotificationQuestionnaireResponsesByUserQuery from "../../graphql/queries/NOTIFICATION_QUESTIONNAIRE_RESPONSES_BY_USER.gql";
 import InAppQuestionnaireResponsesByUserQuery from "../../graphql/queries/IN_APP_QUESTIONNAIRE_RESPONSES_BY_USER.gql";
 import { formatDateWithHourAndSeconds } from "../../util/DateUtils";
@@ -438,7 +458,7 @@ export default {
             ],
           })
           .then((success) => {
-            _this.successMessage = "File successfully deleted!";
+            _this.successMessage = "File successfully d!";
             _this.showSuccessToast();
           })
           .catch((error) => {
@@ -446,6 +466,58 @@ export default {
             _this.showErrorToast();
           });
       }
+    },
+    downloadNqResponsesCsv() {
+      const _this = this;
+      const userId = this.id;
+      this.$apollo
+        .query({
+          query: NotificationQuestionnaireResponsesCsvQuery,
+          variables: {
+            userId: userId,
+          },
+        })
+        .then((result) => {
+          const data = atob(
+            result.data.userNotificationQuestionnaireResponsesCsv.data
+          );
+          const mimeType = mime.lookup(
+            result.data.userNotificationQuestionnaireResponsesCsv.filename
+          );
+          const filename =
+            result.data.userNotificationQuestionnaireResponsesCsv.filename;
+          download(data, filename, mimeType);
+        })
+        .catch((error) => {
+          _this.errorMessage = error;
+          _this.showErrorToast();
+        });
+    },
+    downloadInAppResponsesCsv() {
+      const _this = this;
+      const userId = this.id;
+      this.$apollo
+        .query({
+          query: InAppQuestionnaireResponsesCsvQuery,
+          variables: {
+            userId: userId,
+          },
+        })
+        .then((result) => {
+          const data = atob(
+            result.data.userInAppQuestionnaireResponsesCsv.data
+          );
+          const mimeType = mime.lookup(
+            result.data.userInAppQuestionnaireResponsesCsv.filename
+          );
+          const filename =
+            result.data.userInAppQuestionnaireResponsesCsv.filename;
+          download(data, filename, mimeType);
+        })
+        .catch((error) => {
+          _this.errorMessage = error;
+          _this.showErrorToast();
+        });
     },
   },
   apollo: {

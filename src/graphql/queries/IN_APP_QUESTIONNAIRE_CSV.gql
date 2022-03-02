@@ -1,0 +1,12 @@
+import gql from "graphql-tag"
+
+export default gql`
+    query InAppQuestionnaireResponsesCsv($userId: ID!) {
+        userInAppQuestionnaireResponsesCsv(userId: $userId){
+            _id
+            filename
+            ownerId
+            data
+        }
+    }
+`
